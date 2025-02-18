@@ -1,0 +1,67 @@
+{% extends "base.html" %} {% block content %}
+<div class="container my-5">
+  <div class="islamic-card-lg">
+    <div class="card-header islamic-card-header">
+      <h2 class="mb-0">
+        <i class="fas fa-coins me-2"></i>
+        Financial Dashboard
+      </h2>
+    </div>
+
+    <div class="card-body islamic-card-body">
+      <div class="finance-summary mb-5">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="summary-card income">
+              <h4><i class="fas fa-hand-holding-usd"></i> Total Income</h4>
+              <p class="display-4">£{{ total_income|default:0 }}</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="summary-card expense">
+              <h4><i class="fas fa-file-invoice-dollar"></i> Total Expenses</h4>
+              <p class="display-4">£{{ total_expenses|default:0 }}</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="summary-card balance">
+              <h4><i class="fas fa-scale-balanced"></i> Net Balance</h4>
+              <p class="display-4">£{{ net_balance|default:0 }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="recent-transactions">
+        <h4 class="gold-accent mb-3">
+          <i class="fas fa-clock-rotate-left"></i> Recent Transactions
+        </h4>
+        <div class="table-responsive">
+          <table class="table islamic-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>User</th>
+                <th>Verified By</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for record in records %}
+              <tr>
+                <td>{{ record.date|date:"d M Y" }}</td>
+                <td>{{ record.get_record_type_display }}</td>
+                <td>£{{ record.amount }}</td>
+                <td>{{ record.related_user|default:"-" }}</td>
+                <td>{{ record.verified_by|default:"Pending" }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

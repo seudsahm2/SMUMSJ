@@ -1,0 +1,30 @@
+<div class="islamic-resource-grid">
+    {% for resource in resources %}
+    <div class="resource-card">
+        <div class="resource-thumbnail">
+            <img src="{{ resource.thumbnail.url }}" alt="{{ resource.title }}">
+            <div class="resource-overlay">
+                <span class="resource-category">
+                    {{ resource.get_category_display }}
+                </span>
+            </div>
+        </div>
+        <div class="resource-body">
+            <h5 class="resource-title">
+                <i class="fas fa-book-quran"></i>
+                {{ resource.title }}
+            </h5>
+            <div class="resource-meta">
+                <span class="download-count">
+                    <i class="fas fa-download"></i>
+                    {{ resource.downloads }} downloads
+                </span>
+            </div>
+            <a href="#" class="btn btn-islamic-sm">
+                <i class="fas fa-book-open"></i>
+                View Details
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>

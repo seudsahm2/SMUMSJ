@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block content %}
+<div class="container my-5">
+  <div class="islamic-card-lg">
+    <div class="card-header islamic-card-header">
+      <h2 class="mb-0">
+        <i class="fas fa-moon-star me-2"></i>
+        Ramadan 1445 AH Progress
+      </h2>
+    </div>
+
+    <div class="card-body islamic-card-body">
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="ramadan-stats-card text-center">
+            <div class="stats-icon">
+              <i class="fas fa-praying-hands fa-3x"></i>
+            </div>
+            <h3 class="gold-accent">{{ completed_days }}/30</h3>
+            <p>Days Completed</p>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="ramadan-grid">
+            {% for day in days %}
+            <div class="day-card {% if day.completed %}completed{% endif %}">
+              <div class="day-number">{{ day.number }}</div>
+              <div class="day-content">
+                <p class="quran-verse">"{{ day.verse }}"</p>
+                {% if not day.completed %}
+                <button
+                  class="btn btn-islamic-sm"
+                  hx-post="{% url 'mark-day' day=day.number %}"
+                  hx-target="closest .day-card"
+                >
+                  Mark Complete
+                </button>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +25,13 @@ SECRET_KEY = 'django-insecure-@_duq9%$jx6%xf(snvz!m(77sumea$35w^&q^&e*r2-)#5tf%-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# settings.py
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '172.16.27.124',  # Add your IP here without port/protocol
+    # Add other domains/IPs as needed
+]
 
 
 # Application definition
@@ -37,12 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # 3rd party apps
-    'allauth',
-    'allauth.account',
-    'crispy_forms',
-    'django_tables2',
+    'django.contrib.humanize',
 
     # my apps
     'accounts',
@@ -52,7 +53,21 @@ INSTALLED_APPS = [
     'dawah',
     'education',
     'finance',
-    'resources'
+    'resources',
+    'prayer',
+    'notifications',
+    'ramadan',
+
+
+
+    # 3rd party apps
+    'crispy_forms',
+    'django_tables2',
+    'axes',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'django_extensions',
 ]
 
 # Custom user model
@@ -60,6 +75,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Authentication
 AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
@@ -73,6 +89,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'axes.middleware.AxesMiddleware',
+
 ]
 
 ROOT_URLCONF = 'jamaa_site.urls'
@@ -88,6 +107,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'notifications.context_processors.user_notifications',
             ],
         },
     },
@@ -110,22 +130,51 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#     },
+# ]
+
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 12}},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# HTTPS Settings
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True  # Enable in production
+# Disable SSL redirect in development
+# Disable HTTPS in development
+if DEBUG:
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+# Audit Logging
+INSTALLED_APPS += ['auditlog']
+AUDITLOG_INCLUDE_ALL_MODELS = True
 
+# For django-allauth
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
+# Axes Configuration
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = 1  # 1 hour lockout
+AXES_LOCKOUT_TEMPLATE = 'security/lockout.html'
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -149,3 +198,44 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# jamaa_site/settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For dev
+ACCOUNT_LOGIN_METHODS = {'email'}
+# WARNINGS:
+# ?: settings.ACCOUNT_AUTHENTICATION_METHOD is deprecated, use: settings.ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+# Add this instead:
+ACCOUNT_FORMS = {
+    'signup': 'accounts.forms.CustomSignupForm',
+}
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# settings.py
+LOGIN_REDIRECT_URL = 'member-dashboard'  # Redirect to your dashboard view
+ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'  # Redirect to login after logout
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'your_app_name': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}

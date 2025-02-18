@@ -1,0 +1,23 @@
+<!-- templates/includes/notifications.html -->
+<div class="notification-bell">
+  <i class="fas fa-bell"></i>
+  {% if notifications %}
+  <span class="badge">{{ notifications|length }}</span>
+  {% endif %}
+
+  <div class="notification-dropdown">
+    {% for note in notifications %}
+    <div
+      class="notification-item {% if note.notification_type %} {{ note.notification_type|lower }}{% endif %}"
+    >
+      {{ note.message }}
+      <small>{{ note.created_at|timesince }} ago</small>
+    </div>
+    {% empty %}
+    <div class="notification-item">No new notifications</div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Add to navbar.html -->
+{% include 'includes/notifications.html' %}

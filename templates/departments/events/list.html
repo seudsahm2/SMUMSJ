@@ -1,0 +1,128 @@
+{% load static %} {# Load Django static files #} {% load hijri_tags %}
+<!-- Container for the entire event list -->
+<div class="islamic-event-list">
+  {# Loop through each event in the events queryset #} {% for event in events %}
+  <!-- Individual event item with a subtle shadow -->
+  <div class="event-item shadow-sm">
+    <!-- Banner displaying the event dates -->
+    <div class="event-date-banner">
+      <div class="hijri-date">{{ event.date|hijri_date }}</div>
+      {# Display the Hijri date #}
+      <div class="gregorian-date">{{ event.date|date:"d M Y" }}</div>
+      {# Display the Gregorian date #}
+    </div>
+    <!-- Container for the event's main content -->
+    <div class="event-content">
+      <!-- Event title with an icon that changes based on event type -->
+      <h5 class="event-title">
+        <i
+          class="fas fa-{% if event.event_type == 'RAMADAN' %}moon{% else %}calendar{% endif %} me-2"
+        ></i>
+        {{ event.title }}
+      </h5>
+      <!-- Meta information: location and attendee count -->
+      <div class="event-meta">
+        <span class="badge bg-islamic-red">
+          <i class="fas fa-map-marker-alt"></i> {{ event.location }}
+        </span>
+        <span class="badge bg-gold">
+          <i class="fas fa-users"></i> {{ event.attendees.count }} Attending
+        </span>
+      </div>
+      <!-- Button linking to detailed event view -->
+      <a href="#" class="btn btn-islamic">
+        <i class="fas fa-book-open me-2"></i>
+        View Details
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Inline CSS styling for the event list -->
+<style>
+  /* Container for the event list using a grid layout */
+  .islamic-event-list {
+    display: grid; /* Enable CSS Grid */
+    gap: 1.5rem; /* Space between event items */
+    padding: 1.5rem; /* Padding around the grid */
+    background-color: #f7f3e9; /* Light parchment background */
+  }
+  /* Styling for each event card */
+  .event-item {
+    background: #fff; /* White card background */
+    border-radius: 0.5rem; /* Rounded corners for a soft look */
+    overflow: hidden; /* Clip content that overflows the border radius */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover transitions */
+  }
+  /* Hover effect for event cards */
+  .event-item:hover {
+    transform: translateY(-5px); /* Slight lift effect */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* More pronounced shadow */
+  }
+  /* Date banner styling with a gradient background */
+  .event-date-banner {
+    background: linear-gradient(
+      135deg,
+      #a9341e,
+      #d14c2e
+    ); /* Deep red gradient */
+    color: #fff; /* White text for clarity */
+    padding: 0.5rem 1rem; /* Spacing inside the banner */
+    text-align: center; /* Centered text */
+  }
+  /* Hijri date styling */
+  .hijri-date {
+    font-size: 1rem; /* Base font size */
+    font-weight: bold; /* Bold text to highlight the date */
+  }
+  /* Gregorian date styling */
+  .gregorian-date {
+    font-size: 0.875rem; /* Slightly smaller text */
+    opacity: 0.8; /* Reduced opacity for a subtle look */
+  }
+  /* Container for the event content */
+  .event-content {
+    padding: 1rem; /* Internal spacing for content */
+  }
+  /* Event title styling */
+  .event-title {
+    font-size: 1.25rem; /* Larger font size for prominence */
+    color: #2a5a3b; /* Deep green tone for a refined look */
+    margin-bottom: 0.5rem; /* Spacing below the title */
+  }
+  /* Meta information styling */
+  .event-meta {
+    margin-bottom: 1rem; /* Space below meta info */
+  }
+  /* Badge styling for meta details */
+  .badge {
+    font-size: 0.875rem; /* Slightly smaller text size */
+    padding: 0.5rem; /* Padding inside the badge */
+    border-radius: 0.25rem; /* Rounded corners */
+    margin-right: 0.5rem; /* Space between badges */
+  }
+  /* Custom badge background for Islamic red */
+  .bg-islamic-red {
+    background-color: #a9341e !important; /* Deep red color */
+    color: #fff !important; /* White text for contrast */
+  }
+  /* Custom badge background for gold accents */
+  .bg-gold {
+    background-color: #c19a6b !important; /* Warm gold color */
+    color: #fff !important; /* White text for readability */
+  }
+  /* Styling for the custom button */
+  .btn-islamic {
+    background-color: #a9341e; /* Base deep red background */
+    color: #fff; /* White text */
+    border: none; /* No border */
+    padding: 0.5rem 1rem; /* Adequate padding */
+    border-radius: 0.25rem; /* Slightly rounded edges */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+  }
+  /* Hover state for the custom button */
+  .btn-islamic:hover {
+    background-color: #d14c2e; /* Lighter red on hover */
+  }
+</style>

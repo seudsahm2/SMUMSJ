@@ -1,0 +1,71 @@
+{% extends "base/base.html" %} {% load static %}
+<!-- Ensure this line is at the top of the template -->
+{% block content %}
+<div class="container my-5">
+  <div class="islamic-card-lg">
+    <div class="card-header islamic-card-header">
+      <h2 class="mb-0">
+        <i class="fas fa-user-shield me-2"></i>
+        Administration Dashboard
+      </h2>
+    </div>
+
+    <div class="card-body islamic-card-body">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="admin-nav">
+            <div class="nav-header">Management</div>
+            <a href="#users" class="admin-nav-item active">
+              <i class="fas fa-users-cog"></i> User Management
+            </a>
+            <a href="#events" class="admin-nav-item">
+              <i class="fas fa-calendar-check"></i> Event Control
+            </a>
+            <a href="#content" class="admin-nav-item">
+              <i class="fas fa-file-alt"></i> Content Moderation
+            </a>
+          </div>
+        </div>
+
+        <div class="col-md-9">
+          <div class="admin-content-section">
+            <div class="section-header">
+              <h4><i class="fas fa-users-cog me-2"></i>Registered Members</h4>
+            </div>
+            <div class="islamic-table-wrapper">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Last Active</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for user in users %}
+                  <tr>
+                    <td>{{ user.get_full_name }}</td>
+                    <td>
+                      <span class="role-badge {{ user.role|lower }}">
+                        {{ user.get_role_display }}
+                      </span>
+                    </td>
+                    <td>{{ user.last_login|date:"M d, Y" }}</td>
+                    <td>
+                      <button class="btn btn-islamic-sm">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+<div class="islamic-form-container">
+  <div class="islamic-form-header">
+    <h3 class="text-center mb-4">
+      <i class="fas fa-door-open me-2"></i>
+      Member Login
+    </h3>
+    <div class="islamic-form-icon">
+      <i class="fas fa-mosque fa-3x"></i>
+    </div>
+  </div>
+
+  <form method="post" class="islamic-form">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label class="islamic-label">
+        <i class="fas fa-envelope me-2"></i>
+        Email Address
+      </label>
+      {{ form.email }}
+    </div>
+
+    <button type="submit" class="btn btn-islamic w-100 mt-4">
+      <i class="fas fa-unlock-alt me-2"></i>
+      Sign In
+    </button>
+  </form>
+</div>

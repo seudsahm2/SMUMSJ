@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block content %}
+<div class="container my-5">
+  <div class="islamic-card-lg">
+    <div class="card-header islamic-card-header">
+      <h2 class="mb-0">
+        <i class="fas fa-book-quran me-2"></i>
+        Islamic Learning Resources
+      </h2>
+    </div>
+
+    <div class="card-body islamic-card-body">
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+          <div class="islamic-resource-card">
+            <div class="resource-icon bg-islamic-red">
+              <i class="fas fa-book-open fa-2x"></i>
+            </div>
+            <div class="resource-body">
+              <h4>Daily Hadith</h4>
+              <p class="resource-text arabic-font">{{ hadith.text }}</p>
+              <small class="gold-accent">- {{ hadith.reference }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="islamic-resource-card">
+            <div class="resource-icon bg-gold">
+              <i class="fas fa-video fa-2x"></i>
+            </div>
+            <div class="resource-body">
+              <h4>Scholar Lectures</h4>
+              <div class="lecture-list">
+                {% for lecture in lectures %}
+                <div class="lecture-item">
+                  <i class="fas fa-play-circle me-2"></i>
+                  <a href="{{ lecture.url }}">{{ lecture.title }}</a>
+                  <span class="text-muted">{{ lecture.duration }}</span>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

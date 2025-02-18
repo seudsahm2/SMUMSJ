@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+  <head>
+    <meta charset="UTF-8" /> <!-- Set the character encoding -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- Ensure responsiveness -->
+    <title>
+      {% block title %}St. Mary's Muslim Students Jama{% endblock %}
+    </title>
+    <!-- Bootstrap 5 CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Google Font for an elegant, Arabic-inspired look -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet" />
+    <!-- Custom Global Styles -->
+    <style>
+      /* Set the base font and background color with an Islamic vibe */
+      body {
+        font-family: 'Amiri', serif; /* Elegant, traditional font */
+        background-color: #f7f3e9; /* Light parchment background */
+        color: #2A5A3B; /* Deep green text color */
+      }
+      /* Navbar styling with deep green background */
+      .navbar {
+        background-color: #2A5A3B;
+      }
+      .navbar-brand,
+      .nav-link {
+        color: #fff !important; /* White text for contrast */
+      }
+      /* Hero header: full-width background image with overlay */
+      .hero-header {
+        position: relative;
+        background: url("{% static 'img/hero.jpg' %}") no-repeat center center/cover;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+      }
+      /* Semi-transparent overlay for the hero section */
+      .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(42, 90, 59, 0.7);
+      }
+      /* Ensure hero text is above the overlay */
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+      }
+      /* Decorative divider using an Islamic pattern image */
+      .pattern-divider {
+        width: 100%;
+        height: 4px;
+        background-image: url("{% static 'img/islamic-pattern.png' %}");
+        background-repeat: repeat-x;
+      }
+      /* Custom button styling with warm gold color */
+      .btn-custom {
+        background-color: #C19A6B;
+        border: none;
+        color: #fff;
+      }
+      .btn-custom:hover {
+        background-color: #a17e57;
+      }
+    </style>
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    {% include 'includes/navbar.html' %} <!-- Include the navbar -->
+    <div class="pattern-divider"></div> <!-- Top decorative divider -->
+    <main class="container my-5">
+      {% block content %}{% endblock %}
+    </main>
+    <div class="pattern-divider"></div> <!-- Bottom decorative divider -->
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

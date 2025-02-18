@@ -1,0 +1,77 @@
+{% extends "base.html" %} {% block content %}
+<div class="container my-5">
+  <div class="islamic-card-lg">
+    <div class="card-header islamic-card-header">
+      <div class="event-header-content">
+        <h2 class="mb-3">{{ event.title }}</h2>
+        <div class="event-meta">
+          <span class="meta-item">
+            <i class="fas fa-calendar-alt"></i>
+            {{ event.date|date:"F j, Y" }} ({{ event.date|hijri_date }})
+          </span>
+          <span class="meta-item">
+            <i class="fas fa-map-marker-alt"></i>
+            {{ event.location }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body islamic-card-body">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="event-description">
+            <h4 class="gold-accent">
+              <i class="fas fa-info-circle"></i>
+              Program Details
+            </h4>
+            <p>{{ event.description }}</p>
+          </div>
+
+          <div class="event-attendees">
+            <h4 class="gold-accent">
+              <i class="fas fa-users"></i>
+              Participating Members ({{ event.attendees.count }})
+            </h4>
+            <div class="attendee-grid">
+              {% for attendee in event.attendees.all %}
+              <div class="attendee-badge">
+                <i class="fas fa-user"></i>
+                {{ attendee.first_name }}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="event-actions">
+            {% if is_registered %}
+            <div class="alert alert-success">
+              <i class="fas fa-check-circle"></i>
+              You're registered for this event!
+            </div>
+            {% else %}
+            <a href="#" class="btn btn-islamic-lg w-100 mb-3">
+              <i class="fas fa-calendar-check"></i>
+              RSVP Now
+            </a>
+            {% endif %}
+            <div class="event-share">
+              <h5 class="gold-accent">Share This Event:</h5>
+              <div class="share-buttons">
+                <a href="#" class="btn btn-outline-islamic">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="#" class="btn btn-outline-islamic">
+                  <i class="fab fa-telegram"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

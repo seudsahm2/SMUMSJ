@@ -1,0 +1,104 @@
+{% load static %}
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container">
+    <!-- Brand Logo and Text -->
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <img
+        src="{% static 'images/logo.png' %}"
+        alt="Jama Logo"
+        width="50"
+        class="me-2"
+      />
+      <span class="h3">جامعية طلبة مسلمي سانت ماري</span>
+    </a>
+    <!-- Navbar Toggler for mobile -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dashboard:member-dashboard' %}"
+            >Home</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'events:event-list' %}">Events</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'charity:campaigns' %}">Charity</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'resources:resource-list' %}"
+            >Resources</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'prayer:times' %}">Prayer Times</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'profiles:profile' %}">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Navbar End -->
+
+<!-- Inline CSS for Modern Islamic Navbar -->
+<style>
+  /* Custom Color Variables for Islamic Theme */
+  :root {
+    --islamic-red: #a9341e; /* Deep, rich red */
+    --gold-accent: #c19a6b; /* Warm gold accent */
+    --gold-accent-hover: #a17e57; /* Darker gold on hover */
+  }
+  /* Navbar Container Styling */
+  .navbar {
+    background: linear-gradient(135deg, var(--islamic-red), #d14c2e);
+    border-bottom: 3px solid var(--gold-accent);
+    font-family: "Amiri", serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    padding: 0.75rem 1rem;
+  }
+  /* Brand Styling */
+  .navbar-brand span {
+    color: var(--gold-accent);
+  }
+  /* Navigation Links */
+  .nav-link {
+    color: var(--gold-accent) !important;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+  .nav-link:hover {
+    color: var(--gold-accent-hover) !important;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 0.25rem;
+  }
+  /* Toggler Button (Mobile) */
+  .navbar-toggler {
+    border: none;
+  }
+  .navbar-toggler:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,0.7)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+</style>

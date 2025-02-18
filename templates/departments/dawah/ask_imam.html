@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% load crispy_forms_tags %} {% block content %}
+<div class="container my-5">
+  <div class="islamic-card-lg">
+    <div class="card-header islamic-card-header">
+      <h2 class="mb-0">
+        <i class="fas fa-question-circle me-2"></i>
+        Ask an Imam
+      </h2>
+    </div>
+
+    <div class="card-body islamic-card-body">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="ask-form mb-5">
+            <h4 class="gold-accent mb-3">Submit Your Question</h4>
+            <form method="post">
+              {% csrf_token %} {{ form|crispy }}
+              <button type="submit" class="btn btn-islamic">
+                <i class="fas fa-paper-plane me-2"></i>
+                Submit Question
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <h4 class="gold-accent mb-3">Answered Questions</h4>
+          <div class="answered-questions">
+            {% for question in answered_questions %}
+            <div class="question-card">
+              <div class="question-header">
+                <i class="fas fa-question-circle me-2"></i>
+                {{ question.question|truncatechars:50 }}
+              </div>
+              <div class="answer-text">
+                <i class="fas fa-comment-alt me-2"></i>
+                {{ question.answer|truncatechars:100 }}
+              </div>
+            </div>
+            {% empty %}
+            <p class="text-muted">No answered questions yet</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
