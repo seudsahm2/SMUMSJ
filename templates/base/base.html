@@ -1,83 +1,370 @@
+<!-- filepath: /D:/projects/django_project/SMUMSJ/templates/base/base.html -->
 {% load static %}
+{% load hijri_tags %}
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
   <head>
-    <meta charset="UTF-8" /> <!-- Set the character encoding -->
-    <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- Ensure responsiveness -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>
       {% block title %}St. Mary's Muslim Students Jama{% endblock %}
     </title>
+
     <!-- Bootstrap 5 CSS from CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
     <!-- Google Font for an elegant, Arabic-inspired look -->
-    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Custom Global Styles -->
     <style>
-      /* Set the base font and background color with an Islamic vibe */
+      /* Base font and Islamic-inspired background */
       body {
-        font-family: 'Amiri', serif; /* Elegant, traditional font */
-        background-color: #f7f3e9; /* Light parchment background */
-        color: #2A5A3B; /* Deep green text color */
+        font-family: "Amiri", serif; /* Elegant, traditional font */
+        background: url("{% static 'images/5093021.jpg' %}") no-repeat center
+          center fixed; /*mosque1 for dark mosque10 for light*/
+        background-size: cover; /* Ensure the mosque image covers the entire screen */
+        color: #ffffff; /* White text for contrast */
+        margin: 0;
+        padding: 0;
       }
-      /* Navbar styling with deep green background */
-      .navbar {
-        background-color: #2A5A3B;
-      }
-      .navbar-brand,
-      .nav-link {
-        color: #fff !important; /* White text for contrast */
-      }
-      /* Hero header: full-width background image with overlay */
-      .hero-header {
-        position: relative;
-        background: url("{% static 'img/hero.jpg' %}") no-repeat center center/cover;
-        min-height: 70vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-      }
-      /* Semi-transparent overlay for the hero section */
-      .hero-overlay {
-        position: absolute;
+
+      /* Semi-transparent overlay to reduce brightness and improve readability */
+      .background-overlay {
+        position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(42, 90, 59, 0.7);
+        background: rgba(
+          0,
+          0,
+          0,
+          0.4
+        ); /* Dark overlay to tone down brightness */
+        z-index: -1; /* Ensure it stays behind the content */
       }
-      /* Ensure hero text is above the overlay */
-      .hero-content {
-        position: relative;
-        z-index: 1;
-        text-align: center;
+      
+    /* Prayer Times Section Styling */
+    .prayer-times-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .date-display {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #c19a6b; /* Warm gold tone */
+      text-align: center;
+    }
+    .prayer-container{
+      background: transparent !important;
+    }
+
+    .prayer-times {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      gap: 10px;
+      overflow-x: auto;
+    }
+
+    .prayer-time-box {
+      text-align: center;
+      padding: 5px;
+      border: 2px solid #c19a6b; /* Gold border */
+      border-radius: 10px;
+      margin: 5px;
+      width: 80px;
+      transition: transform 0.3s ease;
+    }
+
+    .prayer-time-box:hover {
+      transform: scale(1.1);
+    }
+
+    .prayer-time-box h4 {
+      font-size: 0.8rem;
+      color: #2a5a3b; /* Deep green */
+      margin-bottom: 5px;
+    }
+
+    .prayer-time-box p {
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: #c19a6b; /* Warm gold */
+    }
+
+    /* Hero header styling with a full-width background image */
+    .hero-header {
+      position: relative;
+      min-height: 70vh; /* Adjust height as needed */
+      background: url("{% static 'images/jamaa_images/photo_2025-02-19_14-25-53.jpg' %}") no-repeat center center;
+      background-size: cover; /* Ensure the image covers the entire section */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    /* Overlay to darken the image for better text readability */
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5); /* Adjust opacity as needed */
+      z-index: 1;
+    }
+
+    /* Ensures the hero content appears above the overlay */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Optional: Adjust the custom button if needed */
+    .btn-custom {
+      background-color: #c19a6b; /* Warm gold */
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .btn-custom:hover {
+      background-color: #a17e57;
+    }
+
+    /* Decorative divider using an Islamic pattern image */
+    .pattern-divider {
+      width: 100%;
+      height: 4px;
+      background-image: url("{% static 'img/islamic-pattern.png' %}");
+      background-repeat: repeat-x;
+      margin: 20px 0;
+    }
+
+    /* Custom button styling with warm gold color */
+    .btn-custom {
+      background-color: #c19a6b; /* Warm gold */
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    .btn-custom:hover {
+      background-color: #a17e57; /* Darker gold on hover */
+    }
+
+    /* Main container styling */
+    main {
+      padding: 20px;
+      color: #ffffff; /* White text */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .hero-header {
+        min-height: 50vh;
       }
-      /* Decorative divider using an Islamic pattern image */
-      .pattern-divider {
-        width: 100%;
-        height: 4px;
-        background-image: url("{% static 'img/islamic-pattern.png' %}");
-        background-repeat: repeat-x;
+      .hero-content h1 {
+        font-size: 2rem;
       }
-      /* Custom button styling with warm gold color */
-      .btn-custom {
-        background-color: #C19A6B;
-        border: none;
-        color: #fff;
+      .prayer-time-box {
+        width: 60px;
+        padding: 5px;
       }
-      .btn-custom:hover {
-        background-color: #a17e57;
+      .prayer-time-box h4 {
+        font-size: 0.7rem;
       }
+      .prayer-time-box p {
+        font-size: 0.8rem;
+      }
+      .date-display {
+        font-size: 1rem;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    /* Date display styling */
+    .date-display {
+      background-color: rgba(255, 255, 255, 0.8);
+      color: #2a5a3b;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .date-display .hijri-text {
+      font-weight: bold;
+    }
+    .date-display .gregorian-text {
+      color: #6c757d;
+    }
+    /* Existing media query for devices with max-width of 768px */
+    /* Ultra-small devices (phones, 378px and down) */
+    @media (max-width: 512px) {
+      /* Ensure proper box sizing */
+      * {
+          box-sizing: border-box;
+      }
+
+      /* Prayer times container adjustments */
+      .prayer-times-container {
+          padding: 10px;
+          margin: 10px 0;
+          flex-direction: column;
+      }
+
+      .date-display {
+          width: 100%;
+          margin-bottom: 15px;
+          padding: 8px;
+          font-size: 0.9rem;
+      }
+
+      .prayer-times {
+          justify-content: flex-start;
+          width: 100%;
+          gap: 5px;
+      }
+
+      .prayer-time-box {
+          width: 70px;
+          margin: 2px;
+          padding: 3px;
+          flex: 1 1 auto;
+      }
+
+      .prayer-time-box h4 {
+          font-size: 0.7rem;
+      }
+
+      .prayer-time-box p {
+          font-size: 0.75rem;
+      }
+
+      /* Hero section adjustments */
+      .hero-header {
+          min-height: 60vh;
+      }
+
+      .hero-content h1 {
+          font-size: 1.8rem !important;
+          line-height: 1.3;
+      }
+
+      .hero-content .lead {
+          font-size: 1rem;
+          line-height: 1.4;
+      }
+
+      .moto-text {
+          font-size: 1.1rem !important;
+      }
+
+      /* General content containment */
+      .container, .container-fluid {
+          padding-left: 12px;
+          padding-right: 12px;
+      }
+
+      /* Navbar brand adjustment */
+      .navbar-brand span {
+          font-size: 1.1rem;
+      }
+  }
+
+  /* Specific adjustment for ultra-small heights */
+  @media (max-height: 600px) and (max-width: 378px) {
+      .hero-header {
+          min-height: 80vh;
+      }
+  }
+
     </style>
     {% block extra_css %}{% endblock %}
   </head>
   <body>
-    {% include 'includes/navbar.html' %} <!-- Include the navbar -->
-    <div class="pattern-divider"></div> <!-- Top decorative divider -->
-    <main class="container my-5">
-      {% block content %}{% endblock %}
-    </main>
-    <div class="pattern-divider"></div> <!-- Bottom decorative divider -->
+    <!-- Background Overlay -->
+    <div class="background-overlay"></div>
+
+    {% include 'includes/navbar.html' %}
+    <!-- Include the navbar -->
+    <div class="pattern-divider"></div>
+    <!-- Top decorative divider -->
+
+    <!-- Date Display -->
+
+    <!-- Prayer Times and Date Display -->
+    <div class="prayer-container container-fluid bg-light py-3">
+      <div class="container prayer-times-container">
+        <!-- Date Display -->
+        <div class="date-display">
+          <div class="hijri-text">{{ current_date|hijri_date }}</div>
+          <div class="gregorian-text">{{ current_date|date:"l, F j, Y" }}</div> <!-- Full date format -->
+        </div>
+
+        <!-- Prayer Times -->
+        <div class="prayer-times">
+          {% if calculated_prayer_times %}
+            {% for name, time in calculated_prayer_times.items %}
+              <div class="prayer-time-box">
+                <h4>{{ name|title }}</h4>
+                <p>{{ time|time:"g:i a" }}</p>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p>No prayer times available.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Section Start -->
+    <section class="hero-header">
+      <!-- Semi-transparent overlay to ensure text readability -->
+      <div class="hero-overlay"></div>
+      <!-- Container for hero content -->
+      <div class="hero-content container text-center">
+        <!-- Name of the Jama -->
+        <h1 class="display-3 mb-3">St. Mary's Muslim Students Jama</h1>
+        <!-- Quranic verse with a motivational motto -->
+        <p class="lead mb-4">
+          "Indeed, in the remembrance of Allah do hearts find rest." <br>
+          <small>(Qur'an 13:28)</small>
+        </p>
+        <!-- A short motto for your Jama -->
+        <p class="moto-text fs-4 mb-4">"Unity in Faith and Knowledge"</p>
+        <!-- Call-to-action button -->
+        <a href="#about" class="btn btn-custom mt-3">Learn More</a>
+      </div>
+    </section>
+    <!-- Hero Section End -->
+
+    <main class="container my-5">{% block content %}{% endblock %}</main>
+
+    <div class="pattern-divider"></div>
+    <!-- Bottom decorative divider -->
+
     <!-- Bootstrap 5 JS Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}

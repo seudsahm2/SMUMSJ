@@ -1,34 +1,14 @@
+<!-- filepath: /D:/projects/django_project/SMUMSJ/templates/dashboard/member.html -->
 {% extends "base/base.html" %}
 {% load static %}
 {% load humanize %}
 {% load charity_tags %}
 {% load hijri_tags %}
-
 {% block title %}St. Mary's Muslim Jama{% endblock %}
-
 {% block content %}
 <!-- Preloader Spinner Start -->
 
 <!-- Preloader Spinner End -->
-
-<!-- Hero Section Start -->
-<section class="hero-header">
-  <div class="hero-overlay"></div> <!-- Dark overlay for readability -->
-  <div class="hero-content container">
-    <p class="fs-4">Assalamu Alaikum</p>
-    <h1 class="display-1">St. Mary's Muslim Jama</h1>
-    <!-- Date Card with light background and rounded corners -->
-    <div class="bg-light p-3 rounded d-inline-block">
-      <div class="hijri-text text-primary fw-bold">
-        {{ current_date|hijri_date }}
-      </div>
-      <div class="gregorian-text text-muted">
-        {{ current_date|date:"F j, Y" }}
-      </div>
-    </div>
-  </div>
-</section>
-<!-- Hero Section End -->
 
 <!-- Quick Actions Section Start -->
 <section class="py-5">
@@ -37,7 +17,7 @@
       <!-- Upcoming Events Action -->
       <div class="col-md-6 col-lg-3">
         <div class="p-4 border rounded shadow-sm">
-          <i class="fas fa-calendar-alt fa-3x mb-3" style="color: #2A5A3B;"></i>
+          <i class="fas fa-calendar-alt fa-3x mb-3" style="color: #2a5a3b"></i>
           <h4>Upcoming Events</h4>
           <p>{{ upcoming_events.count }} events scheduled</p>
           <a href="{% url 'events:event-list' %}" class="btn btn-custom">View All</a>
@@ -46,7 +26,7 @@
       <!-- Charity Progress Action -->
       <div class="col-md-6 col-lg-3">
         <div class="p-4 border rounded shadow-sm">
-          <i class="fas fa-hand-holding-heart fa-3x mb-3" style="color: #2A5A3B;"></i>
+          <i class="fas fa-hand-holding-heart fa-3x mb-3" style="color: #2a5a3b"></i>
           <h4>Charity Progress</h4>
           <p>{{ active_campaigns.count }} active campaigns</p>
           <a href="{% url 'charity:campaigns' %}" class="btn btn-custom">Donate Now</a>
@@ -55,72 +35,109 @@
       <!-- Learning Resources Action -->
       <div class="col-md-6 col-lg-3">
         <div class="p-4 border rounded shadow-sm">
-          <i class="fas fa-book-open fa-3x mb-3" style="color: #2A5A3B;"></i>
+          <i class="fas fa-book-open fa-3x mb-3" style="color: #2a5a3b"></i>
           <h4>Learning Resources</h4>
           <p>{{ resource_count }} available resources</p>
           <a href="{% url 'resources:resource-list' %}" class="btn btn-custom">Explore</a>
         </div>
       </div>
-      <!-- Prayer Times Action -->
-      <div class="col-md-6 col-lg-3">
-        <div class="p-4 border rounded shadow-sm">
-          <i class="fas fa-pray fa-3x mb-3" style="color: #2A5A3B;"></i>
-          <h4>Prayer Times</h4>
-          <p>Today's schedule</p>
-          <a href="{% url 'prayer:times' %}" class="btn btn-custom">View Times</a>
-        </div>
-      </div>
     </div>
   </div>
 </section>
-<!-- Quick Actions Section End -->
 
-<!-- Upcoming Events Section Start -->
-<section class="py-5 bg-light">
+<!-- Previous Events Section -->
+<section class="events-section">
   <div class="container">
-    <h2 class="display-4 text-center mb-5">Upcoming <span class="text-custom">Events</span></h2>
-    {% for event in upcoming_events|slice:":3" %}
-    <div class="row align-items-center mb-4">
+    <h2>Previous <span class="text-custom">Events</span></h2>
+    {% for event in previous_events|slice:":5" %}
+    <div class="row align-items-center mb-4 event-card">
       <!-- Event Date -->
-      <div class="col-md-3">
-        <div class="border-end pe-3">
+      <div class="col-md-2 text-center">
+        <div class="event-date">
           <h6>{{ event.date|date:"d M Y" }}</h6>
           <p class="mb-0">{{ event.date|date:"D H:i" }}</p>
         </div>
       </div>
+      <!-- Event Image -->
+      <div class="col-md-3">
+        <img src="{{ event.images.url }}" alt="{{ event.title }}" class="img-fluid rounded event-image">
+      </div>
       <!-- Event Details -->
-      <div class="col-md-6">
+      <div class="col-md-5 event-details">
         <h4>{{ event.title }}</h4>
         <p>{{ event.description|truncatechars:150 }}</p>
         <a href="{% url 'events:event-detail' event.id %}" class="btn btn-custom">Details</a>
       </div>
-      <!-- Event Image -->
-      <div class="col-md-3">
-        <img src="{{ event.featured_image.url }}" alt="{{ event.title }}" class="img-fluid rounded" />
+      <!-- Location -->
+      <div class="col-md-2 text-center event-location">
+        <p>{{ event.location }}</p>
       </div>
     </div>
     {% endfor %}
   </div>
 </section>
+
+<!-- Upcoming Events Section -->
+<section class="events-section">
+  <div class="container">
+    <h2>Upcoming <span class="text-custom">Events</span></h2>
+    {% for event in upcoming_events|slice:":3" %}
+    <div class="row align-items-center mb-4 event-card">
+      <!-- Event Date -->
+      <div class="col-md-2 text-center">
+        <div class="event-date">
+          <h6>{{ event.date|date:"d M Y" }}</h6>
+          <p class="mb-0">{{ event.date|date:"D H:i" }}</p>
+        </div>
+      </div>
+      <!-- Event Image -->
+      <div class="col-md-3">
+        <img src="{{ event.images.url }}" alt="{{ event.title }}" class="img-fluid rounded event-image">
+      </div>
+      <!-- Event Details -->
+      <div class="col-md-5 event-details">
+        <h4>{{ event.title }}</h4>
+        <p>{{ event.description|truncatechars:150 }}</p>
+        <a href="{% url 'events:event-detail' event.id %}" class="btn btn-custom">Details</a>
+      </div>
+      <!-- Location -->
+      <div class="col-md-2 text-center event-location">
+        <p>{{ event.location }}</p>
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- "More Events" Button -->
+    <div class="text-center mt-4">
+      <a href="{% url 'events:event-list' %}" class="btn btn-lg btn-custom-more">More Events <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+
 <!-- Upcoming Events Section End -->
 
 <!-- Charity Campaigns Section Start -->
 <section class="py-5">
   <div class="container">
-    <h2 class="display-4 text-center mb-5">Current <span class="text-custom">Campaigns</span></h2>
+    <h2 class="display-4 text-center mb-5">
+      Current <span class="text-custom">Campaigns</span>
+    </h2>
     <div class="row">
       {% for campaign in active_campaigns %}
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="p-4 border rounded shadow-sm">
-          <i class="fas fa-donate fa-3x mb-3" style="color: #2A5A3B;"></i>
+          <i class="fas fa-donate fa-3x mb-3" style="color: #2a5a3b"></i>
           <h4>{{ campaign.name }}</h4>
           <!-- Progress bar with percentage -->
-          <div class="progress my-3" style="height: 25px;">
+          <div class="progress my-3" style="height: 25px">
             <div class="progress-bar bg-custom" role="progressbar" style="width: {{ campaign.percentage }}%;" aria-valuenow="{{ campaign.percentage }}" aria-valuemin="0" aria-valuemax="100">
               {{ campaign.percentage }}%
             </div>
           </div>
-          <p>Raised £{{ campaign.current_amount|intcomma }} of £{{ campaign.target|intcomma }}</p>
+          <p>
+            Raised £{{ campaign.current_amount|intcomma }} of £{{ campaign.target|intcomma }}
+          </p>
           <a href="{% url 'charity:campaign-detail' campaign.id %}" class="btn btn-custom">Donate Now</a>
         </div>
       </div>
@@ -130,40 +147,192 @@
 </section>
 <!-- Charity Campaigns Section End -->
 
-<!-- Prayer Times Section Start -->
-<section class="py-5 bg-light">
-  <div class="container">
-    <h2 class="display-4 text-center mb-5">Today's <span class="text-custom">Prayer Times</span></h2>
-    <div class="row g-4 justify-content-center">
-      {% for name, time in prayer_times.items %}
-      <div class="col-md-4">
-        <div class="p-4 border rounded text-center">
-          <h5 class="text-primary">{{ name|title }}</h5>
-          <p class="mb-0">{{ time|time:"g:i a" }}</p>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-<!-- Prayer Times Section End -->
 {% endblock %}
-
 {% block extra_css %}
 <style>
   /* Additional styles specific to the members page */
   .text-custom {
-    color: #C19A6B; /* Warm gold tone */
+    color: #c19a6b; /* Warm gold tone */
   }
   .bg-custom {
-    background-color: #C19A6B; /* Warm gold background for buttons and progress bars */
+    background-color: #c19a6b; /* Warm gold background for buttons and progress bars */
+  }
+/* === Beautiful Islamic Style for Events === */
+
+/* Section Styling */
+.events-section {
+  background: url("{% static 'images/islamic-pattern.png' %}") no-repeat center center/cover;
+  padding: 60px 0;
+  position: relative;
+}
+
+.events-section h2 {
+  font-family: 'Amiri', serif; /* Elegant Arabic-style font */
+  color: #2a5a3b;
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.events-section h2::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background-color: #c19a6b;
+  margin: 10px auto 0;
+}
+
+/* Event Card */
+.event-card {
+  background: linear-gradient(135deg, #fff, #f8f3ea);
+  border: 3px solid #c19a6b;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Event Date */
+.event-date {
+  background: #2a5a3b;
+  color: #fff;
+  text-align: center;
+  border-radius: 10px;
+  padding: 10px;
+  min-width: 90px;
+}
+
+.event-date h6 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.event-date p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Event Image */
+.event-image {
+  border-radius: 10px;
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover .event-image {
+  transform: scale(1.05);
+}
+
+/* Event Details */
+.event-details {
+  flex: 1;
+  padding: 0 20px;
+}
+
+.event-details h4 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #2a5a3b;
+  margin-bottom: 10px;
+}
+
+.event-details p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Location */
+.event-location {
+  font-size: 16px;
+  font-weight: bold;
+  color: #c19a6b;
+  text-align: center;
+}
+
+/* Button Styling */
+.btn-custom {
+  background: #c19a6b;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.btn-custom:hover {
+  background: #a17e57;
+}
+.btn-custom-more {
+  background: linear-gradient(135deg, #2a5a3b, #1e3c2b);
+  color: white;
+  font-weight: bold;
+  padding: 12px 25px;
+  border-radius: 30px;
+  transition: all 0.3s ease-in-out;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.btn-custom-more:hover {
+  background: linear-gradient(135deg, #1e3c2b, #2a5a3b);
+  transform: scale(1.05);
+  color: #fff;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .event-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .event-date {
+    min-width: auto;
+    margin-bottom: 10px;
+  }
+
+  .event-details {
+    padding: 10px 0;
+  }
+
+  .event-location {
+    margin-top: 10px;
+  }
+}
+
+  .event-image {
+    border-radius: 10px;
+  }
+  .btn-custom {
+    background-color: #c19a6b;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  .btn-custom:hover {
+    background-color: #a17e57;
   }
 </style>
 {% endblock %}
-
 {% block extra_js %}
 <script>
   // Hide the spinner once the page has fully loaded
-
 </script>
 {% endblock %}

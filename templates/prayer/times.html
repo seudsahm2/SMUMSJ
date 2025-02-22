@@ -1,0 +1,94 @@
+{% extends "base/base.html" %}
+{% block content %}
+<div class="container my-5">
+  <!-- Date Display -->
+  <h2 class="text-center mb-4" style="color: #C19A6B; font-weight: bold;">
+    Prayer Times for {{ current_date|date:"F j, Y" }}
+  </h2>
+
+  <!-- Prayer Times Section -->
+  <div class="row justify-content-center">
+    {% for name, time in calculated_prayer_times.items %}
+    <div class="col-md-4 col-sm-6 text-center mb-4">
+      <div class="prayer-time-card p-4 rounded border border-gold-accent shadow-sm">
+        <!-- Day/Night Indicator -->
+        <div class="indicator mb-3">
+          {% if name in "fajr dhuhr asr" %}
+          <i class="fas fa-sun fs-3" style="color: #FFD700;"></i> <!-- Sun for day prayers -->
+          {% else %}
+          <i class="fas fa-moon fs-3" style="color: #C0C0C0;"></i> <!-- Moon for night prayers -->
+          {% endif %}
+        </div>
+
+        <!-- Prayer Name -->
+        <h4 class="fw-bold" style="color: #2A5A3B;">
+          {{ name|title }}
+        </h4>
+
+        <!-- Prayer Time -->
+        <p class="fs-4 fw-bold" style="color: #C19A6B;">
+          {{ time|time:"g:i a" }}
+        </p>
+
+        <!-- Mosque Icon -->
+        <div class="mosque-icon mt-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#C19A6B" class="bi bi-mosque" viewBox="0 0 16 16">
+            <path d="M8 0a7 7 0 1 1-7 7 7 7 0 0 1 7-7zm0 1a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/>
+            <path d="M8 1v1h6a1 1 0 0 1 1 1v1h-2V4H4v-1a1 1 0 0 1 1-1h6zm0 11v1H2v-1h6zm0-3v1H2v-1h6z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extra_css %}
+    
+
+    
+<!-- Inline CSS for Styling -->
+<style>
+  /* General Styles */
+  .prayer-time-card {
+    background: #F7F3E9; /* Light parchment background */
+    border: 2px solid #C19A6B; /* Gold border */
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .prayer-time-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Day/Night Indicator */
+  .indicator {
+    font-size: 2rem;
+  }
+
+  /* Mosque Icon */
+  .mosque-icon svg {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .prayer-time-card {
+      margin-bottom: 20px;
+    }
+  }
+</style>
+
+{% endblock %}

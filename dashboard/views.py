@@ -5,6 +5,8 @@ from events.models import Event
 from django.utils import timezone
 from accounts.models import CustomUser
 from charity.models import Donation
+from datetime import datetime
+
 # Set up logging
 logger = logging.getLogger(__name__)
 
@@ -14,12 +16,26 @@ class MemberDashboard(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['current_date'] = timezone.now()
         context['upcoming_events'] = Event.objects.filter(
             date__gte=timezone.now()
         )[:3]
+        context['previous_events'] = Event.objects.filter(
+            date__lt=timezone.now()
+        )
         context['recent_donations'] = Donation.objects.filter(
             donor=self.request.user
         ).order_by('-date')[:5]
+
+        # Debugging code
+        logger.debug(f"Current date: {context['current_date']}")
+        logger.debug(f"Upcoming events: {context['upcoming_events']}")
+        logger.debug(f"Recent donations: {context['recent_donations']}")
+
+        print(f"Current date: {context['current_date']}")
+        print(f"Upcoming events: {context['upcoming_events']}")
+        print(f"Recent donations: {context['recent_donations']}")
+
         return context
 
 

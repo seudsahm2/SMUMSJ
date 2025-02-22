@@ -108,6 +108,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'notifications.context_processors.user_notifications',
+                'dashboard.context_processors.current_date',
+                'prayer.context_processors.prayer_times',
             ],
         },
     },

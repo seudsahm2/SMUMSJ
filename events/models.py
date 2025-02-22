@@ -1,23 +1,33 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+from django.conf import settings
 
 
 class Event(models.Model):
-    EVENT_TYPES = (
-        ('RAMADAN', 'Ramadan Welcome'),
-        ('NEW_STUDENT', 'New Entrants Welcome'),
-        ('BOOK_REVIEW', 'Book Review'),
-        ('FUN_DAY', 'Fun Day'),
-    )
-    title = models.CharField(max_length=200)
-    event_type = models.CharField(max_length=20, choices=EVENT_TYPES)
-    date = models.DateTimeField()
-    location = models.CharField(max_length=200)
+    title = models.CharField(max_length=255)
     description = models.TextField()
-    attendees = models.ManyToManyField(
-        'accounts.CustomUser', through='EventRegistration')
+    date = models.DateTimeField()
+    location = models.CharField(max_length=255)
+    event_type = models.CharField(max_length=50)
+    images = models.ImageField(upload_to="event_images/")
+
+    def __str__(self):
+        return self.title
+
+    def attendee_count(self):
+        return self.registrations.count()  # Related name used in EventRegistration
 
 
 class EventRegistration(models.Model):
-    user = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    registration_date = models.DateTimeField(auto_now_add=True)
+    event = models.ForeignKey(
+        Event, related_name="registrations", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="event_registrations", on_delete=models.CASCADE)
+    registered_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Ensures a user can't register twice
+        unique_together = ("event", "user")
+
+    def __str__(self):
+        return f"{self.user.username} - {self.event.title}"
