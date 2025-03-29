@@ -4,7 +4,7 @@ import dj_database_url
 
 DEBUG = False
 SECRET_KEY = config('SECRET_KEY')
-ALLOWED_HOSTS = ['smumsj.com', '.smumsj.com','.onrender.com']
+ALLOWED_HOSTS = ['smumsj.onrender.com']
 
 DATABASES = {
     'default': dj_database_url.config(
