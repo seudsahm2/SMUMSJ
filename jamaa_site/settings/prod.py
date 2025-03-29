@@ -12,9 +12,6 @@ DATABASES = {
         conn_health_checks=True,
         ssl_require=True,
         engine='django.db.backends.postgresql',
-        options={
-            'options': '-c pool_mode=transaction'
-        }
     )
 }
 
