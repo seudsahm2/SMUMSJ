@@ -6,7 +6,6 @@
 __pycache__/
 local_settings.py
 media/
-staticfiles/
 
 # Backup files #
 *.bak
