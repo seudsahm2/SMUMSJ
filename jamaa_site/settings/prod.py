@@ -7,13 +7,23 @@ SECRET_KEY = config('SECRET_KEY')
 ALLOWED_HOSTS = ['smumsj.onrender.com']
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),  # Uses DATABASE_URL from environment variables
-        conn_max_age=600,
-        conn_health_checks=True,
-        ssl_require=True
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        # Use a default if env var is not set
+        'NAME': os.getenv('DB_NAME', 'postgres'),
+        # Use a default if env var is not set
+        'USER': os.getenv('DB_USER', 'postgres'),
+        # Use a default if env var is not set
+        'PASSWORD': os.getenv('DB_PASSWORD', '0966143454Sahm'),
+        'HOST': os.getenv('DB_HOST'),
+        # Use a default if env var is not set
+        'PORT': os.getenv('DB_PORT', '5432'),
+        # 'OPTIONS': {
+        #     'sslmode': 'require',  # This enforces SSL/TLS connection
+        # }
+    }
 }
+
 
 # HTTPS Settings
 SESSION_COOKIE_SECURE = True
