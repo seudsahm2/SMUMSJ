@@ -81,7 +81,7 @@ coverage.xml
 *.dump
 
 # Static files #
-/static/
+
 /media/
 
 # Logs and databases #
