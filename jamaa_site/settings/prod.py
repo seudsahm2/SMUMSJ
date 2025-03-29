@@ -8,10 +8,10 @@ ALLOWED_HOSTS = ['smumsj.onrender.com']
 
 DATABASES = {
     'default': dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),  # Uses DATABASE_URL from environment variables
         conn_max_age=600,
         conn_health_checks=True,
-        ssl_require=True,
-        engine='django.db.backends.postgresql',
+        ssl_require=True
     )
 }
 
