@@ -1,7 +1,7 @@
 from .common import *
 from decouple import config
 import dj_database_url
-
+import os
 DEBUG = False
 SECRET_KEY = config('SECRET_KEY')
 ALLOWED_HOSTS = ['smumsj.onrender.com']
