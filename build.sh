@@ -1,4 +1,12 @@
+#!/usr/bin/env bash
 set -o errexit
-pip install -r requirements.txt
+
+# Upgrade pip using python's module invocation
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+# Collect static files
 python manage.py collectstatic --noinput
+
+# Apply database migrations
 python manage.py migrate
