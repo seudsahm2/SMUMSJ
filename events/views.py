@@ -11,19 +11,26 @@ from .forms import EventRegistrationForm
 from django.views import View
 from django.utils.decorators import method_decorator
 from .forms import EventRegistrationForm
+from django.utils.timezone import now
 
 
 class EventListView(ListView):
     model = Event
     template_name = 'departments/events/list.html'
-    ordering = ['-date']
+    context_object_name = 'events'
 
     def get_queryset(self):
-        return Event.objects.all()
+        # Order events by date (latest first)
+        return Event.objects.order_by('-date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['events'] = self.get_queryset()
+        current_time = now()
+
+        # Separate events into upcoming and previous
+        context['upcoming_events'] = Event.objects.filter(date__gte=current_time).order_by('date')
+        context['previous_events'] = Event.objects.filter(date__lt=current_time).order_by('-date')
+
         return context
 
 

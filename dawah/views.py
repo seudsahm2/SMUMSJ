@@ -1,3 +1,4 @@
+from django.utils import timezone  # Correct import
 from django.views.generic import ListView, CreateView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -6,7 +7,7 @@ from .forms import AskImamForm
 
 
 class DailyHadithView(ListView):
-    template_name = 'dawah/daily_hadith.html'
+    template_name = 'departments/dawah/daily_hadith.html'
     context_object_name = 'hadiths'
 
     def get_queryset(self):
@@ -19,7 +20,6 @@ class DailyHadithView(ListView):
         context['upcoming_lectures'] = ScholarLecture.objects.filter(
             date__gte=timezone.now())[:3]
         return context
-
 
 class AskImamView(LoginRequiredMixin, CreateView):
     model = Question

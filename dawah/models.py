@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User  # Import the default User model
 
 
 class Hadith(models.Model):
@@ -26,8 +27,7 @@ class ScholarLecture(models.Model):
 
 
 class Question(models.Model):
-    user = models.ForeignKey('accounts.CustomUser',
-                             on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     question = models.TextField()
     answer = models.TextField(blank=True)
     asked_on = models.DateTimeField(auto_now_add=True)

@@ -1,0 +1,249 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load charity_tags %}
+
+{% block content %}
+<style>
+    /* Custom Card Styling */
+/* Custom Card Styling */
+.card {
+    background: linear-gradient(135deg, #fff, #f8f3ea);
+    border: 3px solid #c19a6b;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+/* Card Hover Effect */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Add decorative top border with Islamic geometric pattern */
+.card::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 8px;
+    background: url('https://www.transparenttextures.com/patterns/islamic-pattern.png') repeat-x;
+    position: absolute;
+    top: -8px;
+}
+
+/* Card Body Styling */
+.card-body {
+    padding: 1.5rem;
+    font-family: 'Amiri', serif; /* Elegant serif font */
+    color: #333; /* Dark text color for better readability */
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #2a5a3b, #4a7a5b);
+    color: white;
+    padding: 3rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+}
+
+/* Hero Heading Styling */
+.hero-section h1 {
+    font-family: 'Amiri', serif;
+    position: relative;
+}
+
+.hero-section h1::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    background-color: #c19a6b;
+    margin: 10px auto 0;
+}
+
+/* Progress Bar */
+.progress {
+    height: 15px;
+    border-radius: 5px;
+    background-color: #e0e0e0;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+    background-color: #c19a6b; /* Islamic theme color */
+}
+
+/* Custom Buttons */
+.btn-custom {
+    background-color: #c19a6b;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    border-radius: 25px;
+}
+
+.btn-custom:hover {
+    background-color: #a17e57;
+}
+
+.btn-donate {
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+}
+
+/* Text and Background Utilities */
+.text-custom {
+    color: #c19a6b;
+}
+
+.bg-custom {
+    background-color: #c19a6b;
+}
+
+.card-footer {
+    background-color: #f8f3ea; /* Light background for footer */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge Styling for Campaign Goal */
+.badge {
+    background-color: #2a5a3b;
+    color: white;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+/* Media Queries for small screens (below 768px) */
+@media (max-width: 768px) {
+    .navbar-brand span {
+        font-size: 0.9rem;
+    }
+
+    .navbar-toggler {
+        font-size: 1.2rem;
+    }
+
+    .navbar-nav {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .navbar-nav .nav-item {
+        margin-left: 10px;
+    }
+
+    .card-body {
+        font-size: 0.9rem; /* Adjust font size for smaller screens */
+    }
+}
+
+</style>
+
+<div class="container my-5">
+    <!-- Hero Section -->
+    <div class="hero-section text-center">
+        <h1 class="display-4 fw-bold">Support Our Charity Campaigns</h1>
+        <p class="lead mb-4">Your contributions make a difference. Help us reach our goals and support those in need.</p>
+        <a href="{% url 'charity:donate' %}" class="btn btn-custom btn-lg btn-donate fw-bold">Donate Now</a>
+    </div>
+
+    <!-- Display success messages -->
+    {% if messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <!-- Campaigns Section -->
+    <div class="row g-4">
+        {% for campaign in campaigns %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+                <!-- Campaign Image -->
+                <div class="position-relative">
+                    <img src="{% static 'images/campaign-placeholder.jpg' %}" class="card-img-top rounded-top" alt="{{ campaign.name }}">
+                    <span class="badge bg-success position-absolute top-0 start-0 m-2 p-2">
+                        {{ campaign.goal_amount|floatformat:0 }} USD Goal
+                    </span>
+                </div>
+                <!-- Campaign Details -->
+                <div class="card-body">
+                    <h5 class="card-title text-success fw-bold">{{ campaign.name }}</h5>
+                    <p class="card-text text-muted">{{ campaign.description|truncatechars:120 }}</p>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-custom progress-bar-striped progress-bar-animated" 
+                             role="progressbar" 
+                             style="width: {% campaign_progress campaign %}%;" 
+                             aria-valuenow="{% campaign_progress campaign %}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                    <p class="text-center text-success small mb-2">Help us reach {{ campaign.goal_amount|floatformat:0 }} USD</p>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted small"><strong>${{ campaign.total_donations|default:0|floatformat:0 }}</strong> Raised</span>
+                        <span class="text-muted small"><strong>{% campaign_progress campaign %}%</strong> Funded</span>
+                    </div>
+                </div>
+                <!-- Call to Action -->
+                <div class="card-footer bg-light text-center">
+                    {% campaign_progress campaign as campaign_progress %}
+                    {% if campaign_progress >= 100 %}
+                        <button class="btn btn-secondary w-100 fw-bold btn-donate" disabled>
+                            <i class="fas fa-ban me-2"></i> Campaign Ended
+                        </button>
+                    {% else %}
+                        {% if user.is_authenticated and campaign.has_donated %}
+                            <a href="{% url 'charity:donate' %}?campaign={{ campaign.id }}" class="btn btn-custom w-100 fw-bold btn-donate">
+                                <i class="fas fa-donate me-2"></i>Donate Again
+                            </a>
+                        {% else %}
+                            <a href="{% url 'charity:donate' %}?campaign={{ campaign.id }}" class="btn btn-custom w-100 fw-bold btn-donate">
+                                <i class="fas fa-donate me-2"></i>Donate Now
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                
+                
+                
+                
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-muted">No active campaigns at the moment. Please check back later.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Community Stats Section -->
+    <div class="container mt-5 text-center">
+        <h2 class="fw-bold text-success">Join Our Community of Donors</h2>
+        <p class="text-muted mb-4">Every donation counts towards making a difference.</p>
+        <div class="row">
+            <div class="col-6">
+                <h3 class="text-custom">${{ total_raised|floatformat:0 }}</h3>
+                <p>Total Raised</p>
+            </div>
+            <div class="col-6">
+                <h3 class="text-custom">{{ total_donors }}</h3>
+                <p>Generous Donors</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

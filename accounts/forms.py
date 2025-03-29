@@ -2,39 +2,39 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin  # Add this import
-from django.views.generic import UpdateView  # Add this import
-from allauth.account.forms import SignupForm as AllAuthSignupForm  # Rename import
+from django.views.generic import UpdateView  # Add this import# Rename import
 from django.urls import reverse_lazy  # Add this import
-from .models import CustomUser
-User = get_user_model()
-
-
-class CustomSignupForm(AllAuthSignupForm):  # Use renamed import
-    phone = forms.CharField(max_length=20, required=True)
-
-    def save(self, request):
-        user = super().save(request)
-        user.phone = self.cleaned_data['phone']
-        user.save()
-        return user
-
-
-# accounts/forms.py
-
-
-class ProfileUpdateForm(forms.ModelForm):
+from .models import Profile
+class UserRegistrationForm(forms.ModelForm):
+    password = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput
+    )
+    password2 = forms.CharField(
+        label='Repeat password',
+        widget=forms.PasswordInput
+    )
     class Meta:
-        model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'phone']
+        model = get_user_model()
+        fields = ['username', 'first_name', 'email']
 
-# accounts/views.py
+        def clean_password2(self):
+            cd = self.cleaned_data
+            if cd['password'] != cd['password2']:
+                raise forms.ValidationError('Passwords don\'t match.')
+            return cd['password2']
 
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
-class ProfileView(LoginRequiredMixin, UpdateView):
-    model = CustomUser
-    form_class = ProfileUpdateForm
-    template_name = 'accounts/profile.html'
-    success_url = reverse_lazy('member-dashboard')
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ['first_name', 'last_name', 'email']
+    
 
-    def get_object(self):
-        return self.request.user
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['date_of_birth', 'photo']

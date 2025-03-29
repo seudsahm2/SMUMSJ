@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User  # Import the default User model
+
 from django.conf import settings
 
 
@@ -22,7 +23,7 @@ class EventRegistration(models.Model):
     event = models.ForeignKey(
         Event, related_name="registrations", on_delete=models.CASCADE)
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name="event_registrations", on_delete=models.CASCADE)
+        User, related_name="event_registrations", on_delete=models.CASCADE)
     registered_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -11,39 +11,50 @@
 <!-- Preloader Spinner End -->
 
 <!-- Quick Actions Section Start -->
-<section class="py-5">
+<!-- Quick Actions Section Start -->
+<section class="quick-actions py-5">
   <div class="container">
     <div class="row g-4 text-center">
       <!-- Upcoming Events Action -->
-      <div class="col-md-6 col-lg-3">
-        <div class="p-4 border rounded shadow-sm">
-          <i class="fas fa-calendar-alt fa-3x mb-3" style="color: #2a5a3b"></i>
+      <div class="col-md-6 col-lg-4">
+        <div class="quick-card">
+          <div class="quick-icon">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
           <h4>Upcoming Events</h4>
-          <p>{{ upcoming_events.count }} events scheduled</p>
+          <p class="btn btn-success d-block text-warning fw-bold">{{ upcoming_events.count }} events scheduled</p>
           <a href="{% url 'events:event-list' %}" class="btn btn-custom">View All</a>
         </div>
       </div>
       <!-- Charity Progress Action -->
-      <div class="col-md-6 col-lg-3">
-        <div class="p-4 border rounded shadow-sm">
-          <i class="fas fa-hand-holding-heart fa-3x mb-3" style="color: #2a5a3b"></i>
+      <div class="col-md-6 col-lg-4">
+        <div class="quick-card">
+          <div class="quick-icon">
+            <i class="fas fa-hand-holding-heart"></i>
+          </div>
           <h4>Charity Progress</h4>
-          <p>{{ active_campaigns.count }} active campaigns</p>
+          <p class="btn btn-success d-block text-warning fw-bold">
+            {{ active_campaigns.count }}  campaigns
+        </p>
+        
           <a href="{% url 'charity:campaigns' %}" class="btn btn-custom">Donate Now</a>
         </div>
       </div>
       <!-- Learning Resources Action -->
-      <div class="col-md-6 col-lg-3">
-        <div class="p-4 border rounded shadow-sm">
-          <i class="fas fa-book-open fa-3x mb-3" style="color: #2a5a3b"></i>
+      <div class="col-md-6 col-lg-4">
+        <div class="quick-card">
+          <div class="quick-icon">
+            <i class="fas fa-book-open"></i>
+          </div>
           <h4>Learning Resources</h4>
-          <p>{{ resource_count }} available resources</p>
+          <p class="btn btn-success d-block text-warning fw-bold">{{ resource_count }} available resources</p>
           <a href="{% url 'resources:resource-list' %}" class="btn btn-custom">Explore</a>
         </div>
       </div>
     </div>
   </div>
 </section>
+<!-- Quick Actions Section End -->
 
 <!-- Previous Events Section -->
 <section class="events-section">
@@ -73,6 +84,11 @@
         <p>{{ event.location }}</p>
       </div>
     </div>
+    {% empty %}
+  <div class="empty-state-message events-empty">
+    <i class="fas fa-calendar-times"></i>
+    No previous events to display
+  </div>
     {% endfor %}
   </div>
 </section>
@@ -105,6 +121,11 @@
         <p>{{ event.location }}</p>
       </div>
     </div>
+    {% empty %}
+  <div class="empty-state-message events-empty">
+    <i class="fas fa-calendar-plus"></i>
+    No upcoming events scheduled
+  </div>
     {% endfor %}
 
     <!-- "More Events" Button -->
@@ -118,33 +139,91 @@
 <!-- Upcoming Events Section End -->
 
 <!-- Charity Campaigns Section Start -->
+<!-- Charity Campaigns Section Start -->
 <section class="py-5">
   <div class="container">
     <h2 class="display-4 text-center mb-5">
       Current <span class="text-custom">Campaigns</span>
     </h2>
-    <div class="row">
+    <div class="row g-4">
       {% for campaign in active_campaigns %}
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="p-4 border rounded shadow-sm">
-          <i class="fas fa-donate fa-3x mb-3" style="color: #2a5a3b"></i>
-          <h4>{{ campaign.name }}</h4>
-          <!-- Progress bar with percentage -->
-          <div class="progress my-3" style="height: 25px">
-            <div class="progress-bar bg-custom" role="progressbar" style="width: {{ campaign.percentage }}%;" aria-valuenow="{{ campaign.percentage }}" aria-valuemin="0" aria-valuemax="100">
-              {{ campaign.percentage }}%
-            </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <!-- Campaign Image -->
+          <div class="position-relative">
+            <img src="{% static 'images/campaign-placeholder.jpg' %}" class="card-img-top rounded-top" alt="{{ campaign.name }}">
+            <span class="badge bg-success position-absolute top-0 start-0 m-2 p-2">
+              £{{ campaign.goal_amount|intcomma }} Goal
+            </span>
           </div>
-          <p>
-            Raised £{{ campaign.current_amount|intcomma }} of £{{ campaign.target|intcomma }}
-          </p>
-          <a href="{% url 'charity:campaign-detail' campaign.id %}" class="btn btn-custom">Donate Now</a>
+
+          <!-- Campaign Details -->
+          <div class="card-body">
+            <h4 class="card-title text-success fw-bold">{{ campaign.name }}</h4>
+            <p class="card-text text-muted">{{ campaign.description|truncatewords:20 }}</p>
+
+            <!-- Progress bar -->
+            <!-- In the progress bar -->
+            <div class="progress my-3" style="height: 15px">
+              <div class="progress-bar bg-custom progress-bar-striped progress-bar-animated" 
+                  role="progressbar" 
+                  style="width: {% campaign_progress campaign %}%;" 
+                  aria-valuenow="{% campaign_progress campaign %}" 
+                  aria-valuemin="0" 
+                  aria-valuemax="100">
+                  {% campaign_progress campaign %}%
+              </div>
+            </div>
+
+            <!-- In the details section -->
+            <div class="d-flex justify-content-between">
+              <span class="text-muted small"><strong>£{{ campaign.total_donations|intcomma }}</strong> Raised</span>
+              <span class="text-muted small"><strong>{% campaign_progress campaign %}%</strong> Funded</span>
+            </div>
+
+            <p class="text-center text-success small mb-2">Help us reach £{{ campaign.goal_amount|intcomma }}</p>
+          </div>
+
+          <!-- Call to Action -->
+          <div class="card-footer bg-light text-center">
+            {% campaign_progress campaign as campaign_progress %}
+            {% if campaign_progress >= 100 %}
+                <button class="btn btn-secondary w-100 fw-bold btn-donate" disabled>
+                    <i class="fas fa-ban me-2"></i> Campaign Ended
+                </button>
+            {% else %}
+                {% if user.is_authenticated and campaign.has_donated %}
+                    <a href="{% url 'charity:donate' %}?campaign={{ campaign.id }}" class="btn btn-custom w-100 fw-bold btn-donate">
+                        <i class="fas fa-donate me-2"></i>Donate Again
+                    </a>
+                {% else %}
+                    <a href="{% url 'charity:donate' %}?campaign={{ campaign.id }}" class="btn btn-custom w-100 fw-bold btn-donate">
+                        <i class="fas fa-donate me-2"></i>Donate Now
+                    </a>
+                {% endif %}
+            {% endif %}
+          </div>
         </div>
+      </div>
+      {% empty %}
+      <div class="empty-state-message campaigns-empty">
+        <i class="fas fa-hands-helping"></i>
+        No active campaigns at the moment
       </div>
       {% endfor %}
     </div>
+
+    <!-- "View All Campaigns" Button -->
+    <div class="text-center mt-4">
+      <a href="{% url 'charity:campaigns' %}" class="btn btn-lg btn-custom">
+        View All Campaigns <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
   </div>
 </section>
+
+
+<!-- Charity Campaigns Section End -->
 <!-- Charity Campaigns Section End -->
 
 {% endblock %}
@@ -158,6 +237,134 @@
     background-color: #c19a6b; /* Warm gold background for buttons and progress bars */
   }
 /* === Beautiful Islamic Style for Events === */
+
+/* Quick Actions Section */
+.quick-actions {
+  background: url("{% static 'images/islamic-pattern.png' %}") no-repeat center center/cover;
+  padding: 60px 0;
+}
+
+/* Quick Cards */
+.quick-card {
+  background: url("{% static 'images/bg-13.jpg' %}") no-repeat center center/cover;
+  border-radius: 15px;
+  padding: 30px 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.custom-text {
+  color: #FFD700; /* Replace with any color code */
+  font-weight: bold;
+}
+
+
+/* Hover effect */
+.quick-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Icon Styling */
+.quick-icon {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 30px;
+  color: #ffffff;
+  margin: 0 auto 15px;
+  background: linear-gradient(135deg, #2a5a3b, #4a7a5b);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Title */
+.quick-card h4 {
+  font-size: 1.5rem;
+  color: #2a5a3b;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Description */
+.quick-card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Custom Button */
+.btn-custom {
+  background: linear-gradient(135deg, #c19a6b, #a17e57);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+}
+
+.btn-custom:hover {
+  background: linear-gradient(135deg, #a17e57, #8c6b45);
+  transform: scale(1.05);
+}
+.empty-state-message {
+  font-family: 'Amiri', serif;
+  color: #C19A6B !important;
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 2rem;
+  border: 2px solid rgba(193, 154, 107, 0.3);
+  border-radius: 10px;
+  background: rgba(0, 77, 0, 0.1);
+  margin: 2rem 0;
+}
+
+.empty-state-message i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: block;
+  color: #C19A6B;
+}
+
+/* Campaigns empty state */
+.campaigns-empty {
+  background: rgba(0, 77, 0, 0.15);
+  border-color: rgba(193, 154, 107, 0.4);
+}
+
+/* Events empty state */
+.events-empty {
+  background: rgba(0, 77, 0, 0.1);
+  border-color: rgba(193, 154, 107, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .quick-card {
+    padding: 25px 15px;
+  }
+
+  .quick-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .quick-card h4 {
+    font-size: 1.3rem;
+  }
+
+  .quick-card p {
+    font-size: 0.9rem;
+  }
+}
+
 
 /* Section Styling */
 .events-section {
@@ -186,7 +393,7 @@
 
 /* Event Card */
 .event-card {
-  background: linear-gradient(135deg, #fff, #f8f3ea);
+  background: url("{% static 'images/bg-18.jpg' %}") no-repeat center center/cover;
   border: 3px solid #c19a6b;
   border-radius: 12px;
   padding: 20px;
@@ -258,6 +465,8 @@
 .event-location {
   font-size: 16px;
   font-weight: bold;
+  background-color:rgb(3, 49, 30);
+  border-radius: 10px;
   color: #c19a6b;
   text-align: center;
 }

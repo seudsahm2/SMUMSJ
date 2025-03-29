@@ -1,5 +1,6 @@
 # education/models.py
 from django.db import models
+from django.contrib.auth.models import User  # Import the default User model
 
 
 class EducationalResource(models.Model):
@@ -16,8 +17,8 @@ class EducationalResource(models.Model):
 
 class TutorRequest(models.Model):
     student = models.ForeignKey(
-        'accounts.CustomUser', related_name='student_requests', on_delete=models.CASCADE)
-    tutor = models.ForeignKey('accounts.CustomUser',
+        User, related_name='student_requests', on_delete=models.CASCADE)
+    tutor = models.ForeignKey(User,
                               related_name='tutor_assignments', null=True, on_delete=models.CASCADE)
     subject = models.CharField(max_length=100)
     status = models.CharField(max_length=11, default='OPEN', choices=[

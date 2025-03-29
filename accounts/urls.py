@@ -1,8 +1,12 @@
-from django.urls import path
-from .views import ProfileView
+from django.urls import path,include
+from django.contrib.auth import views as auth_views
 
-app_name = 'accounts'
+from . import views
+
 
 urlpatterns = [
-    path('', ProfileView.as_view(), name='member-profile'),
+    path('social-auth/',include('social_django.urls', namespace='social')),
+    path('', include('django.contrib.auth.urls')),
+    path('register/', views.register, name='register'),
+    path('edit/', views.edit, name='edit'),
 ]

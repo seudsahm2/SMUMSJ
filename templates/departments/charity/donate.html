@@ -1,0 +1,377 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load charity_tags %}
+
+{% block content %}
+<style>
+    /* Container Styling */
+    .donation-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 20px;
+    }
+    
+    /* Card Styling */
+    .donation-card {
+        background-color: #fff;
+        border: 3px solid #c19a6b;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        overflow: hidden;
+        position: relative;
+        max-width: 500px;
+        width: 100%;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .card-header {
+        background-color: #2a5a3b;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        border-bottom: 4px solid #c19a6b;
+        position: relative;
+    }
+
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('{% static "images/islamic-pattern.png" %}') repeat;
+        opacity: 0.1;
+    }
+
+    /* Form Styling */
+    .card-body {
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .icon-label {
+        color: #2a5a3b;
+        font-weight: bold;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .input-group-text {
+        background-color: #2a5a3b;
+        color: white;
+        border: none;
+    }
+
+    .form-control {
+        border: 2px solid #2a5a3b;
+        border-radius: 8px;
+        padding: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #c19a6b;
+        box-shadow: 0 0 10px rgba(193, 154, 107, 0.5);
+    }
+
+    /* Enhanced Dropdown Styling */
+    .form-select {
+        border: 2px solid #2a5a3b;
+        border-radius: 8px;
+        padding: 10px 30px 10px 15px;
+        background-color: #fff;
+        color: #2a5a3b;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="%232a5a3b" viewBox="0 0 16 16"><path d="M8 12L0 4h16L8 12z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 12px;
+    }
+
+    .form-select:hover {
+        border-color: #c19a6b;
+        box-shadow: 0 0 8px rgba(193, 154, 107, 0.3);
+    }
+
+    .form-select:focus {
+        border-color: #c19a6b;
+        box-shadow: 0 0 10px rgba(193, 154, 107, 0.5);
+        outline: none;
+    }
+
+    .form-select option {
+        background-color: #fff;
+        color: #2a5a3b;
+    }
+
+    .form-select option:checked {
+        background-color: #c19a6b;
+        color: white;
+    }
+
+    /* Predefined Amount Buttons */
+    .amount-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .amount-btn {
+        background-color: #f8f9fa;
+        border: 2px solid #2a5a3b;
+        color: #2a5a3b;
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .amount-btn:hover, .amount-btn.active {
+        background-color: #c19a6b;
+        color: white;
+        border-color: #c19a6b;
+    }
+
+    /* Submit Button */
+    .btn-donate {
+        background-color: #c19a6b;
+        color: white;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 25px;
+        border: none;
+        width: 100%;
+        font-size: 1.2em;
+        box-shadow: 0 4px 10px rgba(193, 154, 107, 0.4);
+        transition: all 0.3s ease;
+    }
+
+    .btn-donate:hover {
+        background-color: #a17e57;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(193, 154, 107, 0.6);
+    }
+
+    /* Validation Styles */
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875em;
+        margin-top: 0.25rem;
+    }
+
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+
+    .is-invalid:focus {
+        box-shadow: 0 0 0 0.25rem rgba(220,53,69,.25) !important;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="donation-container">
+    <div class="donation-card">
+        <div class="card-header">
+            <h2>Donate to {% if selected_campaign %}{{ selected_campaign.name }}{% else %}a Campaign{% endif %}</h2>
+            {% if selected_campaign %}<p>{{ selected_campaign.description|truncatechars:100 }}</p>{% endif %}
+        </div>
+        <div class="card-body">
+            <!-- Success Messages -->
+            {% if messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            <!-- Error Messages -->
+            {% if form.errors %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            <!-- Campaign Status Check -->
+            {% if selected_campaign %}
+                {% campaign_progress selected_campaign as campaign_progress %}
+                {% if campaign_progress >= 100 %}
+                    <div class="alert alert-warning">
+                        This campaign has already reached its funding goal. Thank you for your support!
+                    </div>
+                    <button class="btn btn-secondary w-100 fw-bold btn-donate" disabled>
+                        <i class="fas fa-ban me-2"></i> Campaign Ended
+                    </button>
+                {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="icon-label"><i class="fas fa-dollar-sign"></i> Amount</label>
+                            <div class="amount-buttons">
+                                <button type="button" class="amount-btn" data-amount="10">$10</button>
+                                <button type="button" class="amount-btn" data-amount="20">$20</button>
+                                <button type="button" class="amount-btn" data-amount="50">$50</button>
+                                <button type="button" class="amount-btn" data-amount="other">Other</button>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                {{ form.amount }}
+                            </div>
+                            {% if form.amount.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.amount.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label class="icon-label"><i class="fas fa-hand-holding-heart"></i> Campaign</label>
+                            {{ form.campaign }}
+                            {% if form.campaign.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.campaign.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn-donate">Donate Now</button>
+                    </form>
+                {% endif %}
+            {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="icon-label"><i class="fas fa-dollar-sign"></i> Amount</label>
+                        <div class="amount-buttons">
+                            <button type="button" class="amount-btn" data-amount="10">$10</button>
+                            <button type="button" class="amount-btn" data-amount="20">$20</button>
+                            <button type="button" class="amount-btn" data-amount="50">$50</button>
+                            <button type="button" class="amount-btn" data-amount="other">Other</button>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            {{ form.amount }}
+                        </div>
+                        {% if form.amount.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.amount.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="icon-label"><i class="fas fa-hand-holding-heart"></i> Campaign</label>
+                        {{ form.campaign }}
+                        {% if form.campaign.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.campaign.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn-donate">Donate Now</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountButtons = document.querySelectorAll('.amount-btn');
+        const amountInput = document.querySelector('input[name="amount"]');
+        const inputGroup = amountInput.closest('.input-group');
+        const form = document.querySelector('form');
+
+        // Amount button handling
+        amountButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                amountButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const amount = this.getAttribute('data-amount');
+                if (amount === 'other') {
+                    inputGroup.style.display = 'block';
+                    amountInput.value = '';
+                    amountInput.focus();
+                } else {
+                    inputGroup.style.display = 'none';
+                    amountInput.value = amount;
+                }
+            });
+        });
+
+        // Initial state setup
+        if (amountInput.value && !['10', '20', '50'].includes(amountInput.value)) {
+            inputGroup.style.display = 'block';
+            document.querySelector('[data-amount="other"]').classList.add('active');
+        } else if (amountInput.value) {
+            document.querySelector(`[data-amount="${amountInput.value}"]`).classList.add('active');
+            inputGroup.style.display = 'none';
+        }
+
+        // Form validation
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // Clear previous errors
+                document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+                document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+
+                let isValid = true;
+
+                // Validate amount
+                const amountValue = parseFloat(amountInput.value);
+                if (!amountValue || amountValue <= 0) {
+                    isValid = false;
+                    amountInput.classList.add('is-invalid');
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'invalid-feedback d-block mt-2';
+                    errorDiv.textContent = 'Please enter a valid donation amount';
+                    amountInput.parentElement.parentElement.appendChild(errorDiv);
+                }
+
+                // Validate campaign selection
+                const campaignSelect = document.querySelector('select[name="campaign"]');
+                if (!campaignSelect.value) {
+                    isValid = false;
+                    campaignSelect.classList.add('is-invalid');
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'invalid-feedback d-block mt-2';
+                    errorDiv.textContent = 'Please select a campaign';
+                    campaignSelect.parentElement.appendChild(errorDiv);
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

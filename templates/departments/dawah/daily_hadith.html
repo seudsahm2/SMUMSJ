@@ -1,57 +1,300 @@
-{% extends "base.html" %} {% block content %}
-<div class="container my-5">
-  <div class="islamic-card-lg">
-    <div class="card-header islamic-card-header">
-      <h2 class="mb-0">
-        <i class="fas fa-book-quran me-2"></i>
-        Daily Hadith & Lectures
-      </h2>
+{% extends "base/base.html" %}
+{% block content %}
+<div class="hadith-container">
+  <div class="moonlight-gateway">
+    <div class="celestial-header">
+      <div class="star-pattern"></div>
+      <h1 class="illuminated-text">
+        <span class="arabic-decor">﷽</span>
+        Divine Narratives
+        <span class="arabic-decor">ﷺ</span>
+      </h1>
     </div>
 
-    <div class="card-body islamic-card-body">
+    <main class="cosmic-grid">
       {% if today_hadith %}
-      <div class="daily-hadith-section mb-5">
-        <h4 class="gold-accent mb-3">Today's Hadith</h4>
-        <div class="hadith-card">
-          <p class="arabic-font">{{ today_hadith.text }}</p>
-          <p class="text-end fw-bold">- {{ today_hadith.reference }}</p>
+      <section class="centerpiece-hadith">
+        <div class="geometric-portal">
+          <div class="rotating-pattern"></div>
+          <div class="hadith-content">
+            <p class="sacred-text">{{ today_hadith.text }}</p>
+            <div class="reference-badge">{{ today_hadith.reference }}</div>
+          </div>
         </div>
-      </div>
+      </section>
       {% endif %}
 
-      <div class="row">
-        <div class="col-md-8">
-          <h4 class="gold-accent mb-3">Recent Hadith</h4>
-          <div class="hadith-list">
+      <div class="wisdom-columns">
+        <section class="archive-scroll">
+          <h2 class="section-title">Recent Pearls</h2>
+          <div class="scroll-content">
             {% for hadith in hadiths %}
-            <div class="hadith-item">
-              <p class="hadith-date">{{ hadith.date|date:"M d, Y" }}</p>
-              <p class="hadith-text">{{ hadith.text|truncatechars:150 }}</p>
-            </div>
+            <article class="wisdom-card">
+              <div class="card-ornament"></div>
+              <div class="card-content">
+                <time class="celestial-date">{{ hadith.date|date:"M d, Y" }}</time>
+                <p class="hadith-preview">{{ hadith.text|truncatechars:150 }}</p>
+                <div class="reveal-button">Unfold Wisdom</div>
+              </div>
+            </article>
             {% endfor %}
           </div>
-        </div>
+        </section>
 
-        <div class="col-md-4">
-          <h4 class="gold-accent mb-3">Upcoming Lectures</h4>
-          <div class="lecture-list">
+        <section class="knowledge-tower">
+          <h2 class="section-title">Sacred Sessions</h2>
+          <div class="tower-content">
             {% for lecture in upcoming_lectures %}
-            <div class="lecture-card">
-              <h5>{{ lecture.title }}</h5>
-              <p class="text-muted">
-                <i class="fas fa-user-graduate me-2"></i>
-                {{ lecture.scholar }}
-              </p>
-              <p class="text-muted">
-                <i class="fas fa-calendar-alt me-2"></i>
-                {{ lecture.date|date:"M d, Y H:i" }}
-              </p>
+            <div class="lecture-pinnacle">
+              <div class="pinnacle-base"></div>
+              <div class="lecture-details">
+                <h3 class="lecture-title">{{ lecture.title }}</h3>
+                <div class="scholar-marker">{{ lecture.scholar }}</div>
+                <time class="cosmic-time">{{ lecture.date|date:"M d, Y H:i" }}</time>
+                <div class="attendance-portal">Seek Knowledge</div>
+              </div>
             </div>
             {% endfor %}
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+  --celestial-gold: #D4AF37;
+  --midnight-blue: #0A1931;
+  --mystic-silver: #C0C0C0;
+  --parchment: #FDF5E6;
+  --deep-sapphire: #082567;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.hadith-container {
+  background: radial-gradient(circle at center, var(--midnight-blue) 0%, #000 100%);
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.moonlight-gateway {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.celestial-header {
+  position: relative;
+  padding: 4rem 0;
+  text-align: center;
+  perspective: 1000px;
+}
+
+.star-pattern {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 50% 50%, 
+      var(--celestial-gold) 0.5px, 
+      transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.3;
+}
+
+.illuminated-text {
+  font-family: 'Raleway', sans-serif;
+  font-size: 3.5rem;
+  color: var(--parchment);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  text-shadow: 0 0 15px rgba(212,175,55,0.5);
+}
+
+.arabic-decor {
+  font-family: 'Amiri', serif;
+  font-size: 4rem;
+  animation: pulse 4s infinite;
+}
+
+.cosmic-grid {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 4rem;
+}
+
+.centerpiece-hadith {
+  position: relative;
+  height: 500px;
+  perspective: 2000px;
+}
+
+.geometric-portal {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--deep-sapphire),
+    var(--deep-sapphire) 10px,
+    var(--midnight-blue) 10px,
+    var(--midnight-blue) 20px
+  );
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transition: transform 1s;
+}
+
+.rotating-pattern {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%23D4AF37' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  animation: rotate 60s linear infinite;
+}
+
+.hadith-content {
+  position: absolute;
+  inset: 20px;
+  background: var(--midnight-blue);
+  display: grid;
+  place-items: center;
+  padding: 4rem;
+  text-align: center;
+}
+
+.sacred-text {
+  font-family: 'Amiri', serif;
+  font-size: 2.5rem;
+  color: var(--parchment);
+  line-height: 1.8;
+  max-width: 800px;
+}
+
+.reference-badge {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--celestial-gold);
+  color: var(--midnight-blue);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.wisdom-columns {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 3rem;
+}
+
+.archive-scroll {
+  background: linear-gradient(145deg, var(--deep-sapphire) 0%, rgba(8,37,103,0.5) 100%);
+  border-radius: 25px;
+  padding: 2rem;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.scroll-content {
+  display: grid;
+  gap: 2rem;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.wisdom-card {
+  background: var(--midnight-blue);
+  border-radius: 15px;
+  padding: 2rem;
+  position: relative;
+  transition: transform 0.3s;
+}
+
+.card-ornament {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 50px;
+  height: 50px;
+  border-left: 3px solid var(--celestial-gold);
+  border-top: 3px solid var(--celestial-gold);
+}
+
+.hadith-preview {
+  font-family: 'Raleway', sans-serif;
+  color: var(--mystic-silver);
+  margin: 1rem 0;
+}
+
+.reveal-button {
+  background: transparent;
+  border: 2px solid var(--celestial-gold);
+  color: var(--celestial-gold);
+  padding: 0.8rem 2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.knowledge-tower {
+  position: relative;
+}
+
+.lecture-pinnacle {
+  background: linear-gradient(45deg, var(--deep-sapphire) 0%, var(--midnight-blue) 100%);
+  margin-bottom: 2rem;
+  padding: 2rem;
+  border-radius: 20px;
+  position: relative;
+}
+
+.lecture-title {
+  font-family: 'Raleway', sans-serif;
+  color: var(--parchment);
+  margin-bottom: 1rem;
+}
+
+.attendance-portal {
+  background: var(--celestial-gold);
+  color: var(--midnight-blue);
+  padding: 0.8rem 2rem;
+  border-radius: 30px;
+  margin-top: 1.5rem;
+  display: inline-block;
+  font-weight: bold;
+}
+
+
+@media (max-width: 1200px) {
+  .wisdom-columns {
+    grid-template-columns: 1fr;
+  }
+  
+  .centerpiece-hadith {
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .illuminated-text {
+    font-size: 2rem;
+    flex-direction: column;
+  }
+  
+  .sacred-text {
+    font-size: 1.8rem;
+  }
+}
+</style>
 {% endblock %}

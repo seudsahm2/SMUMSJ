@@ -3,16 +3,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from allauth.account.views import SignupView
-from accounts.forms import CustomSignupForm
 
 urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
-
-    path('accounts/signup/', SignupView.as_view(form_class=CustomSignupForm),
-         name='account_signup'),
-    path('accounts/', include('allauth.urls')),
     path('accounts/', include('accounts.urls')),
 
     # Apps
@@ -24,7 +18,6 @@ urlpatterns = [
     path('finance/', include('finance.urls', namespace='finance')),
     path('resources/', include('resources.urls', namespace='resources')),
     path('ramadan/', include('ramadan.urls', namespace='ramadan')),
-    path('prayer/', include('prayer.urls', namespace='prayer')),
 
     # Profile
     path('accounts/profile/', include('profiles.urls')),

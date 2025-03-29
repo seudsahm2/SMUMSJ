@@ -2,7 +2,7 @@
 {% load static %}
 {% load hijri_tags %}
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -16,24 +16,39 @@
       rel="stylesheet"
     />
 
+
     <!-- Google Font for an elegant, Arabic-inspired look -->
     <link
       href="https://fonts.googleapis.com/css2?family=Amiri&display=swap"
       rel="stylesheet"
     />
+    <link href="https://fonts.googleapis.com/css2?family=Scheherazade:wght@400;700&family=Amiri&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Scheherazade:wght@400;700&family=Amiri&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom Global Styles -->
     <style>
       /* Base font and Islamic-inspired background */
       body {
         font-family: "Amiri", serif; /* Elegant, traditional font */
-        background: url("{% static 'images/5093021.jpg' %}") no-repeat center
-          center fixed; /*mosque1 for dark mosque10 for light*/
+        background: linear-gradient(45deg, #004d00, #C19A6B);/* Very Light Mint Green */
+        center fixed; /*mosque1 for dark mosque10 for light*/
         background-size: cover; /* Ensure the mosque image covers the entire screen */
         color: #ffffff; /* White text for contrast */
         margin: 0;
         padding: 0;
-      }
+        padding-top:20px;
+        background-size: 400% 400%;
+        animation: gradientMove 6s ease infinite;
+    }
+    
+  @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+  }
 
       /* Semi-transparent overlay to reduce brightness and improve readability */
       .background-overlay {
@@ -51,17 +66,7 @@
         z-index: -1; /* Ensure it stays behind the content */
       }
       
-    /* Prayer Times Section Styling */
-    .prayer-times-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px auto;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+
 
     .date-display {
       font-size: 1.2rem;
@@ -69,49 +74,13 @@
       color: #c19a6b; /* Warm gold tone */
       text-align: center;
     }
-    .prayer-container{
-      background: transparent !important;
-    }
-
-    .prayer-times {
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: center;
-      gap: 10px;
-      overflow-x: auto;
-    }
-
-    .prayer-time-box {
-      text-align: center;
-      padding: 5px;
-      border: 2px solid #c19a6b; /* Gold border */
-      border-radius: 10px;
-      margin: 5px;
-      width: 80px;
-      transition: transform 0.3s ease;
-    }
-
-    .prayer-time-box:hover {
-      transform: scale(1.1);
-    }
-
-    .prayer-time-box h4 {
-      font-size: 0.8rem;
-      color: #2a5a3b; /* Deep green */
-      margin-bottom: 5px;
-    }
-
-    .prayer-time-box p {
-      font-size: 0.9rem;
-      font-weight: bold;
-      color: #c19a6b; /* Warm gold */
-    }
+  
 
     /* Hero header styling with a full-width background image */
     .hero-header {
-      position: relative;
+      position: relative; 
       min-height: 70vh; /* Adjust height as needed */
-      background: url("{% static 'images/jamaa_images/photo_2025-02-19_14-25-53.jpg' %}") no-repeat center center;
+      background: url("{% static 'images/bg-14.jpg' %}");/* Deep Navy Blue */
       background-size: cover; /* Ensure the image covers the entire section */
       display: flex;
       align-items: center;
@@ -137,41 +106,17 @@
     }
 
     /* Optional: Adjust the custom button if needed */
-    .btn-custom {
-      background-color: #c19a6b; /* Warm gold */
-      border: none;
-      color: #fff;
-      font-weight: bold;
-      padding: 10px 20px;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-    .btn-custom:hover {
-      background-color: #a17e57;
-    }
+
 
     /* Decorative divider using an Islamic pattern image */
     .pattern-divider {
       width: 100%;
       height: 4px;
-      background-image: url("{% static 'img/islamic-pattern.png' %}");
+      background-image: url("{% static 'images/bg-13.jpg' %}");
       background-repeat: repeat-x;
       margin: 20px 0;
     }
 
-    /* Custom button styling with warm gold color */
-    .btn-custom {
-      background-color: #c19a6b; /* Warm gold */
-      border: none;
-      color: #fff;
-      font-weight: bold;
-      padding: 10px 20px;
-      border-radius: 5px;
-      transition: all 0.3s ease;
-    }
-    .btn-custom:hover {
-      background-color: #a17e57; /* Darker gold on hover */
-    }
 
     /* Main container styling */
     main {
@@ -186,16 +131,6 @@
       }
       .hero-content h1 {
         font-size: 2rem;
-      }
-      .prayer-time-box {
-        width: 60px;
-        padding: 5px;
-      }
-      .prayer-time-box h4 {
-        font-size: 0.7rem;
-      }
-      .prayer-time-box p {
-        font-size: 0.8rem;
       }
       .date-display {
         font-size: 1rem;
@@ -225,41 +160,6 @@
       /* Ensure proper box sizing */
       * {
           box-sizing: border-box;
-      }
-
-      /* Prayer times container adjustments */
-      .prayer-times-container {
-          padding: 10px;
-          margin: 10px 0;
-          flex-direction: column;
-      }
-
-      .date-display {
-          width: 100%;
-          margin-bottom: 15px;
-          padding: 8px;
-          font-size: 0.9rem;
-      }
-
-      .prayer-times {
-          justify-content: flex-start;
-          width: 100%;
-          gap: 5px;
-      }
-
-      .prayer-time-box {
-          width: 70px;
-          margin: 2px;
-          padding: 3px;
-          flex: 1 1 auto;
-      }
-
-      .prayer-time-box h4 {
-          font-size: 0.7rem;
-      }
-
-      .prayer-time-box p {
-          font-size: 0.75rem;
       }
 
       /* Hero section adjustments */
@@ -303,7 +203,7 @@
     </style>
     {% block extra_css %}{% endblock %}
   </head>
-  <body>
+  <body style="background-color: #C19A60;">
     <!-- Background Overlay -->
     <div class="background-overlay"></div>
 
@@ -314,31 +214,6 @@
 
     <!-- Date Display -->
 
-    <!-- Prayer Times and Date Display -->
-    <div class="prayer-container container-fluid bg-light py-3">
-      <div class="container prayer-times-container">
-        <!-- Date Display -->
-        <div class="date-display">
-          <div class="hijri-text">{{ current_date|hijri_date }}</div>
-          <div class="gregorian-text">{{ current_date|date:"l, F j, Y" }}</div> <!-- Full date format -->
-        </div>
-
-        <!-- Prayer Times -->
-        <div class="prayer-times">
-          {% if calculated_prayer_times %}
-            {% for name, time in calculated_prayer_times.items %}
-              <div class="prayer-time-box">
-                <h4>{{ name|title }}</h4>
-                <p>{{ time|time:"g:i a" }}</p>
-              </div>
-            {% endfor %}
-          {% else %}
-            <p>No prayer times available.</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-
     <!-- Hero Section Start -->
     <section class="hero-header">
       <!-- Semi-transparent overlay to ensure text readability -->
@@ -346,16 +221,15 @@
       <!-- Container for hero content -->
       <div class="hero-content container text-center">
         <!-- Name of the Jama -->
-        <h1 class="display-3 mb-3">St. Mary's Muslim Students Jama</h1>
+        <h1 class="display-3 mb-3 mt-5">St. Mary's Muslim Students Jama</h1>
         <!-- Quranic verse with a motivational motto -->
-        <p class="lead mb-4">
+        <p class="lead mb-4 mt-5">
           "Indeed, in the remembrance of Allah do hearts find rest." <br>
           <small>(Qur'an 13:28)</small>
         </p>
         <!-- A short motto for your Jama -->
-        <p class="moto-text fs-4 mb-4">"Unity in Faith and Knowledge"</p>
+        <p class="moto-text fs-4 mb-4 p-10">"Unity in Faith and Knowledge"</p>
         <!-- Call-to-action button -->
-        <a href="#about" class="btn btn-custom mt-3">Learn More</a>
       </div>
     </section>
     <!-- Hero Section End -->
